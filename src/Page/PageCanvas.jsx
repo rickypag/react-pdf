@@ -1,7 +1,14 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import PageContext from '../PageContext';
+
+import Overlay from './Overlay';
+
+import RegionSelect from '../region/RegionSelect';
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+
+import '../react-contextmenu.css';
 
 import {
   callIfDefined,
@@ -14,6 +21,18 @@ import {
 import { isPage, isRotate } from '../shared/propTypes';
 
 export class PageCanvasInternal extends PureComponent {
+  constructor (props) {
+		super(props);
+		this.onChange = this.onChange.bind(this);
+		this.setParentDimensions = props.setDimensions;
+		this.state = {
+			regions: [],
+			numPages: null,
+			pageNumber: 1,
+			display: props.display,
+		};
+  }
+	
   componentDidMount() {
     this.drawPageOnCanvas();
   }
@@ -107,10 +126,20 @@ export class PageCanvasInternal extends PureComponent {
 
     canvas.width = renderViewport.width;
     canvas.height = renderViewport.height;
+    
+    const w = Math.floor(viewport.width);
+    const h = Math.floor(viewport.height);
 
-    canvas.style.width = `${Math.floor(viewport.width)}px`;
-    canvas.style.height = `${Math.floor(viewport.height)}px`;
-
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+    
+    this.setState({
+		height: h,
+		width: w,
+	});
+	
+	this.setParentDimensions(h, w);
+	
     const renderContext = {
       get canvasContext() {
         return canvas.getContext('2d');
@@ -128,17 +157,83 @@ export class PageCanvasInternal extends PureComponent {
       .then(this.onRenderSuccess)
       .catch(this.onRenderError);
   }
+  
+    onChange (regions) {
+		this.setState({
+			regions: regions
+		});
+	}
+	
+	regionRenderer (regionProps) {
+		if (!regionProps.isChanging) {
+			return (
+				<div style={{ position: 'absolute', right: 0, bottom: '-1.5em' }}>
+					<select onChange={(event) => this.changeRegionData(regionProps.index, event)} value={regionProps.data.dataType}>
+						<option value='1'>Green</option>
+						<option value='2'>Blue</option>
+						<option value='3'>Red</option>
+					</select>
+				</div>
+			);
+		}
+	}
 
   render() {
+  		const regionStyle = {
+			background: 'rgba(255, 0, 0, 0)',
+			'position': 'absolute',
+		};
+		
+		const {display} = this.props;
+		
     return (
+    <Fragment>
       <canvas
         className="react-pdf__Page__canvas"
         style={{
-          display: 'block',
+          display: 'inline',
           userSelect: 'none',
         }}
         ref={(ref) => { this.canvasLayer = ref; }}
       />
+		<RegionSelect
+			maxRegions={1}
+			regions={this.state.regions}
+			regionStyle={regionStyle}
+			constraint
+			onChange={this.onChange}
+			regionRenderer={this.regionRenderer}
+			style={{
+				border: '1px solid black',
+				position: 'absolute',
+				display: `${display}`,	
+				width: `${this.state.width}px`,
+				height: `${this.state.height}px`,
+			}}
+		>
+			<img
+				src='prova.jpega'
+				width={`${this.state.width}px`}
+				height={`${this.state.height}px`}
+				style={{
+					
+				}}
+			/>
+		</RegionSelect>
+	<ContextMenu id="some_unique_identifier">
+        <MenuItem style={{'background-color': 'red'}} data={{foo: 'bar'}} onClick={this.handleClick}>
+          ContextMenu Item 1
+        </MenuItem>
+        <MenuItem data={{foo: 'bar'}} onClick={this.handleClick}>
+          ContextMenu Item 2
+        </MenuItem>
+        <MenuItem divider />
+        <MenuItem data={{foo: 'bar'}} onClick={this.handleClick}>
+          ContextMenu Item 3
+        </MenuItem>
+      </ContextMenu>
+     </Fragment>
+      
     );
   }
 }

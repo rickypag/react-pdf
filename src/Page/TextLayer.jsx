@@ -16,8 +16,12 @@ import {
 import { isPage, isRotate } from '../shared/propTypes';
 
 export class TextLayerInternal extends PureComponent {
-  state = {
-    textItems: null,
+  constructor(props) {
+	super(props)
+	this.state = {
+		textItems: null,
+		display: props.display,
+	}
   }
 
   componentDidMount() {
@@ -116,19 +120,18 @@ export class TextLayerInternal extends PureComponent {
 
   render() {
     const { unrotatedViewport: viewport, rotate } = this;
+    const {display} = this.props;
 
     return (
       <div
         className="react-pdf__Page__textContent"
         style={{
           position: 'absolute',
-          top: '50%',
-          left: '50%',
           width: `${viewport.width}px`,
           height: `${viewport.height}px`,
           color: 'transparent',
-          transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
-          pointerEvents: 'none',
+          left: '0px',
+          display: `${display}`,
         }}
       >
         {this.renderTextItems()}

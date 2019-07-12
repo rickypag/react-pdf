@@ -37,7 +37,18 @@ const defaultScale = 1.0;
 export class PageInternal extends PureComponent {
   state = {
     page: null,
+    height: 0,
+    width: 0,
+    
   }
+  
+  setDimensions = (h, w) => {
+	this.setState({
+		height: h,
+		width: w,
+	});
+  }
+
 
   componentDidMount() {
     const { pdf } = this.props;
@@ -279,6 +290,7 @@ export class PageInternal extends PureComponent {
 
   renderMainLayer() {
     const { renderMode } = this.props;
+    const { layerShowing } = this.props;
 
     switch (renderMode) {
       case 'none':
@@ -290,20 +302,21 @@ export class PageInternal extends PureComponent {
       case 'canvas':
       default:
         return (
-          <PageCanvas key={`${this.pageKey}_canvas`} />
+          <PageCanvas display={layerShowing === 'selector'?'inline-block':'none'} setDimensions={this.setDimensions} key={`${this.pageKey}_canvas`} />
         );
     }
   }
 
   renderTextLayer() {
     const { renderTextLayer } = this.props;
+    const { layerShowing } = this.props;
 
     if (!renderTextLayer) {
       return null;
     }
 
     return (
-      <TextLayer key={`${this.pageKey}_text`} />
+      <TextLayer display={layerShowing === 'textlayer'?'inline-block':'none'} key={`${this.pageKey}_text`} />
     );
   }
 
@@ -393,7 +406,13 @@ export class PageInternal extends PureComponent {
 
           this.ref = ref;
         }}
-        style={{ position: 'relative' }}
+        style={{
+			width: `${this.state.width}px`,
+			height: `${this.state.height}px`,
+			textAlign: 'center',
+			display: 'inline',
+			position: 'relative',
+		}}
         data-page-number={pageNumber}
         {...this.eventProps}
       >
