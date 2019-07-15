@@ -462,12 +462,7 @@ function (_PureComponent) {
         className: (0, _mergeClassNames["default"])('react-pdf__Document', className),
         ref: inputRef
       }, this.eventProps, {
-        style: {
-          textAlign: 'center',
-          backgroundColor: 'grey',
-          paddingTop: '5px',
-          paddingBottom: '5px'
-        }
+        style: this.props.style
       }), this.renderContent());
     }
   }, {

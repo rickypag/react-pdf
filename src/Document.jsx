@@ -355,12 +355,7 @@ export default class Document extends PureComponent {
         className={mergeClassNames('react-pdf__Document', className)}
         ref={inputRef}
         {...this.eventProps}
-        style={{
-			textAlign: 'center',
-			backgroundColor: 'grey',
-			paddingTop: '5px',
-			paddingBottom: '5px',
-		}}
+        style={this.props.style}
       >
         {this.renderContent()}
       </div>

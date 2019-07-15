@@ -302,7 +302,7 @@ export class PageInternal extends PureComponent {
       case 'canvas':
       default:
         return (
-          <PageCanvas display={layerShowing === 'selector'?'inline-block':'none'} setDimensions={this.setDimensions} key={`${this.pageKey}_canvas`} />
+          <PageCanvas pageJSON={this.props.pageJSON} display={layerShowing === 'selector'?'inline-block':'none'} setDimensions={this.setDimensions} key={`${this.pageKey}_canvas`} />
         );
     }
   }

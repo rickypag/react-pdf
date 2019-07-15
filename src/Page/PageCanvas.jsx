@@ -203,6 +203,7 @@ export class PageCanvasInternal extends PureComponent {
 			constraint
 			onChange={this.onChange}
 			regionRenderer={this.regionRenderer}
+			pageJSON={this.props.pageJSON}
 			style={{
 				border: '1px solid black',
 				position: 'absolute',

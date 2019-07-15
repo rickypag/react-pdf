@@ -231,6 +231,7 @@ function (_PureComponent) {
         constraint: true,
         onChange: this.onChange,
         regionRenderer: this.regionRenderer,
+        pageJSON: this.props.pageJSON,
         style: {
           border: '1px solid black',
           position: 'absolute',

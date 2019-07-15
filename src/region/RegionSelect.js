@@ -12,6 +12,8 @@ class RegionSelect extends Component {
 		this.onDocMouseTouchEnd = this.onDocMouseTouchEnd.bind(this);
 		this.onRegionMoveStart = this.onRegionMoveStart.bind(this);
 		this.regionCounter = 0;
+		this.actualWidth = 0;
+		this.actualHeight = 0;
 	}
 	componentDidMount() {
 		document.addEventListener('mousemove', this.onDocMouseTouchMove);
@@ -169,7 +171,7 @@ class RegionSelect extends Component {
 		};
 	}
 	onRegionMoveStart (event, index) {
-		if (!event.target.dataset.wrapper && !event.target.dataset.dir) {
+		if (/*!event.target.dataset.wrapper &&*/ !event.target.dataset.dir) {
 			return;
 		}
 		event.preventDefault();
@@ -186,6 +188,11 @@ class RegionSelect extends Component {
 		const regionHeight = (currentRegion.height / 100 * this.refs.image.offsetHeight);
 		const clientPosDiffX = regionLeft - clientPos.x;
 		const clientPosDiffY = regionTop - clientPos.y;
+		
+		/*console.log(regionLeft)
+		console.log(regionTop)
+		console.log(regionWidth)
+		console.log(regionHeight)*/
 
 		const resizeDir = event.target.dataset.dir;
 
@@ -227,10 +234,14 @@ class RegionSelect extends Component {
 	}
 	renderRect (rect, index) {
 		return <Region
+			pageJSON={this.props.pageJSON}
 			x={rect.x}
 			y={rect.y}
 			width={rect.width}
 			height={rect.height}
+			imageWidth={this.refs.image.offsetWidth}
+			imageHeight={this.refs.image.offsetHeight}
+			imageOffset={this.getElementOffset(this.refs.image)}
 			handles={!rect.new}
 			data={rect.data}
 			key={index}

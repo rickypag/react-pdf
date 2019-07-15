@@ -43,6 +43,8 @@ function (_Component) {
     _this.onDocMouseTouchEnd = _this.onDocMouseTouchEnd.bind((0, _assertThisInitialized2["default"])(_this));
     _this.onRegionMoveStart = _this.onRegionMoveStart.bind((0, _assertThisInitialized2["default"])(_this));
     _this.regionCounter = 0;
+    _this.actualWidth = 0;
+    _this.actualHeight = 0;
     return _this;
   }
 
@@ -237,7 +239,9 @@ function (_Component) {
   }, {
     key: "onRegionMoveStart",
     value: function onRegionMoveStart(event, index) {
-      if (!event.target.dataset.wrapper && !event.target.dataset.dir) {
+      if (
+      /*!event.target.dataset.wrapper &&*/
+      !event.target.dataset.dir) {
         return;
       }
 
@@ -252,6 +256,11 @@ function (_Component) {
       var regionHeight = currentRegion.height / 100 * this.refs.image.offsetHeight;
       var clientPosDiffX = regionLeft - clientPos.x;
       var clientPosDiffY = regionTop - clientPos.y;
+      /*console.log(regionLeft)
+      console.log(regionTop)
+      console.log(regionWidth)
+      console.log(regionHeight)*/
+
       var resizeDir = event.target.dataset.dir;
 
       if (resizeDir) {
@@ -294,10 +303,14 @@ function (_Component) {
       var _this2 = this;
 
       return _react["default"].createElement(_Region["default"], {
+        pageJSON: this.props.pageJSON,
         x: rect.x,
         y: rect.y,
         width: rect.width,
         height: rect.height,
+        imageWidth: this.refs.image.offsetWidth,
+        imageHeight: this.refs.image.offsetHeight,
+        imageOffset: this.getElementOffset(this.refs.image),
         handles: !rect["new"],
         data: rect.data,
         key: index,

@@ -248,6 +248,7 @@ function (_PureComponent) {
         case 'canvas':
         default:
           return _react["default"].createElement(_PageCanvas["default"], {
+            pageJSON: this.props.pageJSON,
             display: layerShowing === 'selector' ? 'inline-block' : 'none',
             setDimensions: this.setDimensions,
             key: "".concat(this.pageKey, "_canvas")
